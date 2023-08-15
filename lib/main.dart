@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                 if (isEmailVerified || isOTPVerified == true) {
                   print('Verified User');
                 } else {
-                  print('Email is not Verified');
+                  print('Email is NOT Verified');
                 }
                 return const Text(
                   'Done',
