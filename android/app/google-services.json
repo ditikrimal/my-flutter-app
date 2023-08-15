@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512178117744",
+    "project_id": "ditik-apps-mynotes",
+    "storage_bucket": "ditik-apps-mynotes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512178117744:android:700ccd3d676eef83f2a8b5",
+        "android_client_info": {
+          "package_name": "com.example.myfirstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512178117744-nfmj2h0cqgvd96hffvs1dusmm7kq47qk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5Z0D4pQKhdx2pu-9B5DuHjmKaPCPojMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512178117744-nfmj2h0cqgvd96hffvs1dusmm7kq47qk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
