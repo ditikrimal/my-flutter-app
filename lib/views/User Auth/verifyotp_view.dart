@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfirstapp/views/register_view.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'login_view.dart';
 
 // ignore: must_be_immutable
 class OtpPage extends StatefulWidget {
@@ -34,8 +33,15 @@ class OtpPageState extends State<OtpPage> {
 
   @override
   void initState() {
-    _otp = TextEditingController();
     super.initState();
+
+    _otp = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _otp.dispose();
   }
 
   @override
@@ -50,7 +56,7 @@ class OtpPageState extends State<OtpPage> {
               fontFamily: 'cursive', color: Colors.blue, fontSize: 40),
         ),
         centerTitle: true,
-        toolbarHeight: 200,
+        toolbarHeight: 150,
         titleTextStyle: const TextStyle(
           fontSize: 35.0,
           color: Colors.black,
@@ -70,7 +76,7 @@ class OtpPageState extends State<OtpPage> {
                     const Card(
                       elevation: 0,
                       color: Colors.transparent,
-                      margin: EdgeInsets.only(top: 50),
+                      margin: EdgeInsets.only(top: 10),
                       child: Text('Verify Your OTP',
                           style: TextStyle(fontSize: 20, color: Colors.white)),
                     ),
@@ -286,42 +292,52 @@ class OtpPageState extends State<OtpPage> {
                         ),
                       ),
                     ),
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                color: Colors.transparent,
-                                margin: const EdgeInsets.only(top: 10),
-                                child: const Text('Didn\'t receive an OTP?',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                              Container(
-                                height: 40,
-                                margin: const EdgeInsets.only(top: 10),
-                                padding: const EdgeInsets.only(right: 40),
-                                child: TextButton(
-                                  onPressed: () async {},
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  color: Colors.transparent,
+                                  margin: const EdgeInsets.only(top: 20),
+                                  child: const Text("Resend OTP in ",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 20),
                                   child: const Text(
-                                    'Resend',
+                                    "",
                                     style: TextStyle(
-                                      color: Color.fromARGB(255, 100, 119, 136),
-                                      fontSize: 15,
-                                    ),
+                                        color: Colors.blue, fontSize: 17),
                                   ),
                                 ),
+                              ]),
+                          Container(
+                            height: 40,
+                            margin: const EdgeInsets.only(top: 0),
+                            child: TextButton(
+                              onPressed: () async {},
+                              child: const Text(
+                                'Resend',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 100, 119, 136),
+                                  fontSize: 15,
+                                ),
                               ),
-                            ]))
+                            ),
+                          ),
+                        ]),
                   ],
                 ),
               );
             default:
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
           }
         },
       ),
