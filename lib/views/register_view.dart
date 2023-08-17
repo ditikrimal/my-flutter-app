@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,8 @@ class RegisterViewState extends State<RegisterView> {
   late final TextEditingController _password;
   late final TextEditingController _name;
   EmailOTP myauth = EmailOTP();
+  bool isButtonDisabled = false;
+  String buttonText = 'SIGNUP';
 
   @override
   void initState() {
@@ -140,11 +144,21 @@ class RegisterViewState extends State<RegisterView> {
                       margin: const EdgeInsets.only(top: 30),
                       child: TextButton(
                         onPressed: () async {
+                          setState(() {
+                            isButtonDisabled = true;
+                            buttonText = 'Loading...';
+                          });
                           final email = _email.text;
                           final password = _password.text;
                           final name = _name.text;
 
                           if (email == "" || password == "" || name == "") {
+                            await Future.delayed(
+                                const Duration(milliseconds: 200));
+                            setState(() {
+                              isButtonDisabled = false;
+                              buttonText = 'SIGNUP';
+                            });
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: SizedBox(
@@ -181,6 +195,12 @@ class RegisterViewState extends State<RegisterView> {
                                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                 .hasMatch(email);
                             if (emailValid == false) {
+                              await Future.delayed(
+                                  const Duration(milliseconds: 200));
+                              setState(() {
+                                isButtonDisabled = false;
+                                buttonText = 'SIGNUP';
+                              });
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
                                 content: SizedBox(
@@ -236,6 +256,12 @@ class RegisterViewState extends State<RegisterView> {
                               if (emailExist.isEmpty) {
                                 try {
                                   if (password.length < 8) {
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 200));
+                                    setState(() {
+                                      isButtonDisabled = false;
+                                      buttonText = 'SIGNUP';
+                                    });
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(const SnackBar(
                                       content: SizedBox(
@@ -304,17 +330,25 @@ class RegisterViewState extends State<RegisterView> {
                                       backgroundColor: Colors.green,
                                     ));
 
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => OtpPage(
-                                                  myauth: myauth,
-                                                  email: email,
-                                                  password: password,
-                                                  name: name,
-                                                )));
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OtpPage(
+                                                myauth: myauth,
+                                                email: email,
+                                                password: password,
+                                                name: name,
+                                              )),
+                                      (route) => false,
+                                    );
                                   }
                                 } catch (e) {
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 200));
+                                  setState(() {
+                                    isButtonDisabled = false;
+                                    buttonText = 'SIGNUP';
+                                  });
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
                                     content: SizedBox(
@@ -394,9 +428,10 @@ class RegisterViewState extends State<RegisterView> {
                           side:
                               const BorderSide(width: 0.7, color: Colors.white),
                         ))),
-                        child: const Text(
-                          'Signup',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        child: Text(
+                          buttonText,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20),
                         ),
                       ),
                     ),
@@ -422,7 +457,7 @@ class RegisterViewState extends State<RegisterView> {
                                 child: TextButton(
                                   onPressed: () async {
                                     Navigator.pushNamedAndRemoveUntil(
-                                        context, '/', (route) => false);
+                                        context, '/login', (route) => false);
                                   },
                                   child: const Text(
                                     'Login',

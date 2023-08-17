@@ -5,6 +5,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myfirstapp/views/register_view.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -305,13 +306,7 @@ class OtpPageState extends State<OtpPage> {
                                 margin: const EdgeInsets.only(top: 10),
                                 padding: const EdgeInsets.only(right: 40),
                                 child: TextButton(
-                                  onPressed: () async {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginView()));
-                                  },
+                                  onPressed: () async {},
                                   child: const Text(
                                     'Resend',
                                     style: TextStyle(

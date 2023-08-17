@@ -129,7 +129,6 @@ class LoginViewState extends State<LoginView> {
                               Map<String, dynamic> data = docSnapshot.data()!;
                               var isVerified = data['isVerified'];
                               if (isVerified == 'true') {
-                                Navigator.of(context).pop();
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   '/',
@@ -230,7 +229,11 @@ class LoginViewState extends State<LoginView> {
                                   padding: const EdgeInsets.only(right: 40),
                                   child: TextButton(
                                     onPressed: () async {
-                                      Navigator.pushNamed(context, '/register');
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        '/register',
+                                        (route) => false,
+                                      );
                                     },
                                     child: const Text(
                                       'Signup',
