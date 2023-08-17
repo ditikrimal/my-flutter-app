@@ -23,7 +23,7 @@ class RegisterViewState extends State<RegisterView> {
   late final TextEditingController _name;
   EmailOTP myauth = EmailOTP();
   bool isButtonDisabled = false;
-  String buttonText = 'SIGNUP';
+  String buttonText = 'Signup';
 
   @override
   void initState() {

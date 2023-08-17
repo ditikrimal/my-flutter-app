@@ -14,7 +14,7 @@ class LoggedMainView extends StatefulWidget {
   State<LoggedMainView> createState() => _LoggedMainViewState();
 }
 
-int _selectedIndex = 0;
+int _selectedIndex = 1;
 
 class _LoggedMainViewState extends State<LoggedMainView> {
   static const List<Widget> _widgetOptions = <Widget>[
@@ -32,7 +32,10 @@ class _LoggedMainViewState extends State<LoggedMainView> {
             icon: const Icon(Icons.notifications),
             color: Colors.white,
             iconSize: 30,
-            padding: const EdgeInsets.only(right: 20),
+            padding: EdgeInsets.all(10),
+          ),
+          const SizedBox(
+            width: 20,
           )
         ],
         backgroundColor: Colors.black,
@@ -109,10 +112,8 @@ class _LoggedMainViewState extends State<LoggedMainView> {
                 onTabChange: (index) {
                   if (index < _widgetOptions.length) {
                     setState(() {
-                      _selectedIndex = index;
+                      _selectedIndex = 1;
                     });
-                  } else {
-                    print('Index out of range');
                   }
                 }),
           ),

@@ -17,6 +17,8 @@ class LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   final db = FirebaseFirestore.instance;
+  bool isButtonDisabled = false;
+  String buttonText = 'Login';
 
   @override
   void initState() {
@@ -113,6 +115,10 @@ class LoginViewState extends State<LoginView> {
                       margin: const EdgeInsets.only(top: 30),
                       child: TextButton(
                         onPressed: () async {
+                          setState(() {
+                            isButtonDisabled = true;
+                            buttonText = 'Loading...';
+                          });
                           final email = _email.text;
                           final password = _password.text;
                           try {
@@ -127,6 +133,12 @@ class LoginViewState extends State<LoginView> {
                             Map<String, dynamic> data = docSnapshot.data()!;
                             var isVerified = data['isVerified'];
                             if (isVerified == 'true') {
+                              await Future.delayed(
+                                  const Duration(milliseconds: 200));
+                              setState(() {
+                                isButtonDisabled = false;
+                                buttonText = 'SIGNUP';
+                              });
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 '/',
@@ -134,6 +146,12 @@ class LoginViewState extends State<LoginView> {
                               );
                             }
                           } on FirebaseAuthException {
+                            await Future.delayed(
+                                const Duration(milliseconds: 100));
+                            setState(() {
+                              isButtonDisabled = false;
+                              buttonText = 'SIGNUP';
+                            });
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content: SizedBox(
@@ -198,8 +216,8 @@ class LoginViewState extends State<LoginView> {
                           side:
                               const BorderSide(width: 0.7, color: Colors.white),
                         ))),
-                        child: const Text(
-                          'Login',
+                        child: Text(
+                          buttonText,
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
