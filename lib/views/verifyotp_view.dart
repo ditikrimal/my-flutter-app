@@ -5,7 +5,6 @@ import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfirstapp/main.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -75,11 +74,11 @@ class OtpPageState extends State<OtpPage> {
                           style: TextStyle(fontSize: 20, color: Colors.white)),
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 10, left: 10),
+                      padding: const EdgeInsets.only(right: 10, left: 10),
                       color: Colors.transparent,
                       margin: const EdgeInsets.only(top: 10),
                       child: Text(
-                        'An otp and verification link was sent to "${widget.email}"',
+                        'An otp has been sent to "${widget.email}"',
                         style:
                             const TextStyle(fontSize: 15, color: Colors.grey),
                         textAlign: TextAlign.center,
@@ -163,18 +162,16 @@ class OtpPageState extends State<OtpPage> {
                                 'email': widget.email,
                                 'isVerified': 'true'
                               };
-                              final isOTPVerified = true;
                               CollectionReference collectionRef =
                                   FirebaseFirestore.instance
                                       .collection('emailOTP');
                               collectionRef.doc(widget.email).set(dataToSave);
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage(
-                                            isOTPVerified: true,
-                                          )));
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/',
+                                (route) => false,
+                              );
 
                               try {
                                 await FirebaseAuth.instance
@@ -329,7 +326,7 @@ class OtpPageState extends State<OtpPage> {
                 ),
               );
             default:
-              return const Text('Loading');
+              return CircularProgressIndicator();
           }
         },
       ),

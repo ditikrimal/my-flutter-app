@@ -1,15 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '/firebase_options.dart';
 import 'package:email_otp/email_otp.dart';
 
-import 'login_view.dart';
-import 'verify_otp.dart';
+import 'verifyotp_view.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView(String s, {super.key});
+  const RegisterView({super.key});
 
   @override
   State<RegisterView> createState() => RegisterViewState();
@@ -221,19 +221,21 @@ class RegisterViewState extends State<RegisterView> {
                                   password: "puoorapmqqunupdh",
                                   secure: "TLS",
                                   port: 587);
+
                               myauth.setConfig(
                                   appEmail: "rml.ditik69@gmail.com",
                                   appName: "My Notes",
                                   userEmail: email,
                                   otpLength: 6,
                                   otpType: OTPType.digitsOnly);
+
                               FirebaseAuth auth = FirebaseAuth.instance;
+
                               List<String> emailExist =
                                   await auth.fetchSignInMethodsForEmail(email);
                               if (emailExist.isEmpty) {
                                 try {
                                   if (password.length < 8) {
-                                    // ignore: use_build_context_synchronously
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(const SnackBar(
                                       content: SizedBox(
@@ -273,7 +275,6 @@ class RegisterViewState extends State<RegisterView> {
                                           Color.fromARGB(255, 152, 18, 18),
                                     ));
                                   } else if (await myauth.sendOTP() == true) {
-                                    // ignore: use_build_context_synchronously
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: SizedBox(
@@ -302,17 +303,7 @@ class RegisterViewState extends State<RegisterView> {
                                       ),
                                       backgroundColor: Colors.green,
                                     ));
-                                    Map<String, String> dataToSave = {
-                                      'fullName': name,
-                                      'email': email,
-                                      'isVerified': 'false'
-                                    };
-                                    CollectionReference collectionRef =
-                                        FirebaseFirestore.instance
-                                            .collection('emailOTP');
-                                    collectionRef.doc(email).set(dataToSave);
 
-                                    // ignore: use_build_context_synchronously
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -324,7 +315,6 @@ class RegisterViewState extends State<RegisterView> {
                                                 )));
                                   }
                                 } catch (e) {
-                                  // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(
                                     content: SizedBox(
@@ -364,7 +354,6 @@ class RegisterViewState extends State<RegisterView> {
                                   ));
                                 }
                               } else {
-                                // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
                                   content: SizedBox(
@@ -432,11 +421,8 @@ class RegisterViewState extends State<RegisterView> {
                                 padding: const EdgeInsets.only(right: 40),
                                 child: TextButton(
                                   onPressed: () async {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginView()));
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, '/', (route) => false);
                                   },
                                   child: const Text(
                                     'Login',
@@ -452,7 +438,7 @@ class RegisterViewState extends State<RegisterView> {
                 ),
               );
             default:
-              return const Text('Loading');
+              return const CircularProgressIndicator();
           }
         },
       ),

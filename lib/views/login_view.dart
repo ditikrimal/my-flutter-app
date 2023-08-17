@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:myfirstapp/views/register_view.dart';
-
 import '../firebase_options.dart';
 
 class LoginView extends StatefulWidget {
@@ -130,44 +128,13 @@ class LoginViewState extends State<LoginView> {
 
                               Map<String, dynamic> data = docSnapshot.data()!;
                               var isVerified = data['isVerified'];
-                              var userFullName = data['fullName'];
                               if (isVerified == 'true') {
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => HomeView(
-                                //               userFullName: userFullName,
-                                //             )));
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: SizedBox(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Snap!',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        'Email is not verified.',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  )),
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  backgroundColor:
-                                      Color.fromARGB(255, 152, 18, 18),
-                                ));
+                                Navigator.of(context).pop();
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/',
+                                  (route) => false,
+                                );
                               }
                             } on FirebaseAuthException {
                               ScaffoldMessenger.of(context)
@@ -263,11 +230,7 @@ class LoginViewState extends State<LoginView> {
                                   padding: const EdgeInsets.only(right: 40),
                                   child: TextButton(
                                     onPressed: () async {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RegisterView('GFG')));
+                                      Navigator.pushNamed(context, '/register');
                                     },
                                     child: const Text(
                                       'Signup',
@@ -284,7 +247,7 @@ class LoginViewState extends State<LoginView> {
                   ),
                 );
               default:
-                return const Text('Loading');
+                return const CircularProgressIndicator();
             }
           },
         ));
