@@ -137,7 +137,7 @@ class LoginViewState extends State<LoginView> {
                                   const Duration(milliseconds: 200));
                               setState(() {
                                 isButtonDisabled = false;
-                                buttonText = 'SIGNUP';
+                                buttonText = 'Login';
                               });
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
@@ -150,7 +150,7 @@ class LoginViewState extends State<LoginView> {
                                 const Duration(milliseconds: 100));
                             setState(() {
                               isButtonDisabled = false;
-                              buttonText = 'SIGNUP';
+                              buttonText = 'Login';
                             });
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
