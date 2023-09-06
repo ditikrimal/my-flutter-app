@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/constants/routes.dart';
 import '../../firebase_options.dart';
 
 class LoginView extends StatefulWidget {
@@ -117,7 +118,7 @@ class LoginViewState extends State<LoginView> {
                         onPressed: () async {
                           setState(() {
                             isButtonDisabled = true;
-                            buttonText = 'Loading...';
+                            buttonText = 'Loding...';
                           });
                           final email = _email.text;
                           final password = _password.text;
@@ -245,7 +246,7 @@ class LoginViewState extends State<LoginView> {
                                   onPressed: () async {
                                     Navigator.pushNamedAndRemoveUntil(
                                       context,
-                                      '/register',
+                                      registerRoute,
                                       (route) => false,
                                     );
                                   },

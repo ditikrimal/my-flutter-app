@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myfirstapp/constants/routes.dart';
 import 'package:myfirstapp/views/User%20Auth/login_view.dart';
 import 'package:myfirstapp/views/User%20Auth/register_view.dart';
 import 'package:myfirstapp/views/User%20Logged/logged_main.dart';
@@ -24,8 +25,8 @@ void main() async {
     home: const HomePage(),
     initialRoute: '/',
     routes: {
-      '/login': (context) => const LoginView(),
-      '/register': (context) => const RegisterView(),
+      loginRoute: (context) => const LoginView(),
+      registerRoute: (context) => const RegisterView(),
     },
   ));
 }
@@ -43,7 +44,7 @@ class HomePage extends StatelessWidget {
           if (user == null) {
             return LoginView(); // user is signed out
           } else {
-            return LoggedMainView();
+            return LoggedMainView(); //user is signed and redirected to logged in page
           }
         } else {
           return CircularProgressIndicator(); // waiting for connection state to become active

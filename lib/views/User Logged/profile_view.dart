@@ -28,7 +28,7 @@ class _ProfileViewState extends State<ProfileView> {
                       const EdgeInsets.symmetric(horizontal: 13, vertical: 13),
                   width: double.infinity,
                   child: const Text(
-                    'Profile',
+                    'My Profile',
                     style: TextStyle(color: Colors.white, fontSize: 22),
                     textAlign: TextAlign.left,
                   ),

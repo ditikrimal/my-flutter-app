@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/constants/routes.dart';
 import '/firebase_options.dart';
 import 'package:email_otp/email_otp.dart';
 
@@ -475,7 +476,7 @@ class RegisterViewState extends State<RegisterView> {
                                       onPressed: () async {
                                         Navigator.pushNamedAndRemoveUntil(
                                             context,
-                                            '/login',
+                                            loginRoute,
                                             (route) => false);
                                       },
                                       child: const Text(

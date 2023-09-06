@@ -28,6 +28,55 @@ class OtpPage extends StatefulWidget {
 
 class OtpPageState extends State<OtpPage> {
   late final TextEditingController _otp;
+  // This variable determines whether the button is disable or not
+  bool _isPressed = false;
+  Color buttonColor = Colors.green;
+
+  // This function is called when the button gets pressed
+  void _myCallback() {
+    setState(() {
+      buttonColor = Colors.grey;
+      _isPressed = true;
+    });
+
+    widget.myauth.setSMTP(
+        host: "smtp.gmail.com",
+        auth: true,
+        username: "rml.ditik69@gmail.com",
+        password: "puoorapmqqunupdh",
+        secure: "TLS",
+        port: 587);
+
+    widget.myauth.setConfig(
+        appEmail: "rml.ditik69@gmail.com",
+        appName: "My Notes",
+        userEmail: widget.email,
+        otpLength: 6,
+        otpType: OTPType.digitsOnly);
+
+    widget.myauth.sendOTP();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: SizedBox(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Great!',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            'OTP sent again.',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
+        ],
+      )),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      backgroundColor: Colors.green,
+    ));
+  }
 
   @override
   void initState() {
@@ -300,31 +349,29 @@ class OtpPageState extends State<OtpPage> {
                                 Container(
                                   color: Colors.transparent,
                                   margin: const EdgeInsets.only(top: 20),
-                                  child: const Text("Resend OTP in ",
+                                  child: const Text("Resend OTP once.",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w300,
                                         color: Colors.white,
                                       )),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  child: const Text(
-                                    "",
-                                    style: TextStyle(
-                                        color: Colors.blue, fontSize: 17),
-                                  ),
-                                ),
                               ]),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Container(
                             height: 40,
                             margin: const EdgeInsets.only(top: 0),
-                            child: TextButton(
-                              onPressed: () async {},
+                            child: ElevatedButton(
+                              onPressed:
+                                  _isPressed == false ? _myCallback : null,
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: buttonColor),
                               child: const Text(
                                 'Resend',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 100, 119, 136),
+                                  color: Colors.white,
                                   fontSize: 15,
                                 ),
                               ),

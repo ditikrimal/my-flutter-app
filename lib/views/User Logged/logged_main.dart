@@ -48,6 +48,7 @@ class _LoggedMainViewState extends State<LoggedMainView> {
   ];
   @override
   Widget build(BuildContext context) {
+    returnUserDetails('fullName');
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
