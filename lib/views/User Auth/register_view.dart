@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import '../../widgets/alert_snackbar.dart';
 import '/firebase_options.dart';
 import 'package:email_otp/email_otp.dart';
 
@@ -167,37 +168,12 @@ class RegisterViewState extends State<RegisterView> {
                                   buttonText = 'SIGNUP';
                                 });
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: SizedBox(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Snap!',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Empty Fields.',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  backgroundColor:
-                                      Color.fromARGB(255, 152, 18, 18),
+                                    .showSnackBar(AlertSnackbar(
+                                  statusColor:
+                                      const Color.fromARGB(255, 152, 18, 18),
+                                  messageStatus: 'Snap!',
+                                  message: 'Empty fields',
+                                  secondaryMessage: '',
                                 ));
                               } else {
                                 final bool emailValid = RegExp(
@@ -211,37 +187,12 @@ class RegisterViewState extends State<RegisterView> {
                                     buttonText = 'SIGNUP';
                                   });
                                   ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: SizedBox(
-                                        child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Snap!',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Not a valid email',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                    ),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 152, 18, 18),
+                                      .showSnackBar(AlertSnackbar(
+                                    statusColor:
+                                        const Color.fromARGB(255, 152, 18, 18),
+                                    messageStatus: 'Snap!',
+                                    message: 'Not a valid email',
+                                    secondaryMessage: '',
                                   ));
                                 } else {
                                   myauth.setSMTP(
@@ -273,76 +224,22 @@ class RegisterViewState extends State<RegisterView> {
                                           buttonText = 'SIGNUP';
                                         });
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          content: SizedBox(
-                                              child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Snap!',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    'Weak password',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  Text(
-                                                    '(At least 8 characters)',
-                                                    style:
-                                                        TextStyle(fontSize: 12),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )),
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                          ),
-                                          backgroundColor:
-                                              Color.fromARGB(255, 152, 18, 18),
+                                            .showSnackBar(AlertSnackbar(
+                                          statusColor: const Color.fromARGB(
+                                              255, 152, 18, 18),
+                                          messageStatus: 'Snap!',
+                                          message: 'Weak password',
+                                          secondaryMessage:
+                                              ' (At least 8 characters)',
                                         ));
                                       } else if (await myauth.sendOTP() ==
                                           true) {
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: SizedBox(
-                                              child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'Great',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              Text(
-                                                "An otp was sent to $email",
-                                                style: const TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ],
-                                          )),
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                          ),
-                                          backgroundColor: Colors.green,
+                                            .showSnackBar(AlertSnackbar(
+                                          statusColor: Colors.green,
+                                          messageStatus: 'Great!',
+                                          message: "An otp was sent to $email",
+                                          secondaryMessage: '',
                                         ));
 
                                         Navigator.pushAndRemoveUntil(
@@ -364,75 +261,24 @@ class RegisterViewState extends State<RegisterView> {
                                         isButtonDisabled = false;
                                         buttonText = 'SIGNUP';
                                       });
+
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: SizedBox(
-                                            child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Snap!',
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'An error has occured.',
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  '(Please try again)',
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )),
-                                        behavior: SnackBarBehavior.floating,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                        backgroundColor:
-                                            Color.fromARGB(255, 152, 18, 18),
+                                          .showSnackBar(AlertSnackbar(
+                                        statusColor: const Color.fromARGB(
+                                            255, 152, 18, 18),
+                                        messageStatus: 'Snap!',
+                                        message: 'An error has occured',
+                                        secondaryMessage: ' (Please try again)',
                                       ));
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: SizedBox(
-                                          child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Snap!',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(
-                                            'Email is already taken',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ],
-                                      )),
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                      ),
-                                      backgroundColor:
-                                          Color.fromARGB(255, 152, 18, 18),
+                                        .showSnackBar(AlertSnackbar(
+                                      statusColor: const Color.fromARGB(
+                                          255, 152, 18, 18),
+                                      messageStatus: 'Snap!',
+                                      message: 'Email is already taken',
+                                      secondaryMessage: '',
                                     ));
                                   }
                                 }

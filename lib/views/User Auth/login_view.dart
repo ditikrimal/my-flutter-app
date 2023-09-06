@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
 import '../../firebase_options.dart';
+import '../../widgets/alert_snackbar.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -154,59 +155,21 @@ class LoginViewState extends State<LoginView> {
                               buttonText = 'Login';
                             });
                             ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: SizedBox(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Snap!',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    'Invalid Email or Password',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              )),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              backgroundColor: Color.fromARGB(255, 152, 18, 18),
+                                .showSnackBar(AlertSnackbar(
+                              statusColor:
+                                  const Color.fromARGB(255, 152, 18, 18),
+                              messageStatus: 'Snap!',
+                              message: 'Invalid Email or Password',
+                              secondaryMessage: '',
                             ));
                           } catch (e) {
                             ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: SizedBox(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Snap!',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    'An error has occured.',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              )),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              backgroundColor: Color.fromARGB(255, 152, 18, 18),
+                                .showSnackBar(AlertSnackbar(
+                              statusColor:
+                                  const Color.fromARGB(255, 152, 18, 18),
+                              messageStatus: 'Snap!',
+                              message: 'An error has occured',
+                              secondaryMessage: ' (Please try again)',
                             ));
                           } //catch
                         },
@@ -219,7 +182,8 @@ class LoginViewState extends State<LoginView> {
                         ))),
                         child: Text(
                           buttonText,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20),
                         ),
                       ),
                     ),

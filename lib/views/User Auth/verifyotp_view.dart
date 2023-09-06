@@ -5,6 +5,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../widgets/alert_snackbar.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -55,26 +56,11 @@ class OtpPageState extends State<OtpPage> {
         otpType: OTPType.digitsOnly);
 
     widget.myauth.sendOTP();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: SizedBox(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Great!',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-          Text(
-            'OTP sent again.',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-          ),
-        ],
-      )),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      backgroundColor: Colors.green,
+    ScaffoldMessenger.of(context).showSnackBar(AlertSnackbar(
+      statusColor: Colors.green,
+      messageStatus: 'Great!',
+      message: 'OTP sent again',
+      secondaryMessage: '',
     ));
   }
 
@@ -176,39 +162,11 @@ class OtpPageState extends State<OtpPage> {
                             if (await widget.myauth.verifyOTP(otp: inputOTP) ==
                                 true) {
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: SizedBox(
-                                    child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Success',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'OTP Verified',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(
-                                          '(Redirecting to home)',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                backgroundColor: Colors.green,
+                                  .showSnackBar(AlertSnackbar(
+                                statusColor: Colors.green,
+                                messageStatus: 'Success',
+                                message: 'OTP Verified',
+                                secondaryMessage: ' (Redirecting to home)',
                               ));
 
                               Map<String, String> dataToSave = {
@@ -234,92 +192,32 @@ class OtpPageState extends State<OtpPage> {
                                         password: widget.password);
                               } on FirebaseAuthException {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: SizedBox(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Snap!',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        'Ann error occured.',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  )),
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  backgroundColor:
-                                      Color.fromARGB(255, 152, 18, 18),
+                                    .showSnackBar(AlertSnackbar(
+                                  statusColor:
+                                      const Color.fromARGB(255, 152, 18, 18),
+                                  messageStatus: 'Snap!',
+                                  message: 'An error has occured',
+                                  secondaryMessage: ' (Please try again)',
                                 ));
                               }
                             } else {
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: SizedBox(
-                                    child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Snap!',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      'Wrong OTP.',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                )),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                ),
-                                backgroundColor:
-                                    Color.fromARGB(255, 152, 18, 18),
+                                  .showSnackBar(AlertSnackbar(
+                                statusColor:
+                                    const Color.fromARGB(255, 152, 18, 18),
+                                messageStatus: 'Snap!',
+                                message: 'Wrong OTP',
+                                secondaryMessage: '',
                               ));
                             }
                           } catch (e) {
                             ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: SizedBox(
-                                  child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Snap!',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    'Ann error occured.',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              )),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              backgroundColor: Color.fromARGB(255, 152, 18, 18),
+                                .showSnackBar(AlertSnackbar(
+                              statusColor:
+                                  const Color.fromARGB(255, 152, 18, 18),
+                              messageStatus: 'Snap!',
+                              message: 'An error has occured',
+                              secondaryMessage: ' (Please try again)',
                             ));
                           }
                         },
