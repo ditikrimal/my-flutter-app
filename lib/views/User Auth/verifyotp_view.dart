@@ -5,6 +5,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myfirstapp/constants/routes.dart';
 import '../../widgets/alert_snackbar.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,6 +83,21 @@ class OtpPageState extends State<OtpPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, loginRoute, (route) => false)
+            },
+            icon: const Icon(Icons.cancel),
+            color: Colors.grey,
+            iconSize: 30,
+            padding: const EdgeInsets.only(bottom: 0, left: 10),
+          ),
+          const SizedBox(
+            width: 20,
+          )
+        ],
         backgroundColor: Colors.black,
         title: const Text(
           'My Notes',
@@ -89,7 +105,7 @@ class OtpPageState extends State<OtpPage> {
               fontFamily: 'cursive', color: Colors.blue, fontSize: 40),
         ),
         centerTitle: true,
-        toolbarHeight: 150,
+        toolbarHeight: 125,
         titleTextStyle: const TextStyle(
           fontSize: 35.0,
           color: Colors.black,

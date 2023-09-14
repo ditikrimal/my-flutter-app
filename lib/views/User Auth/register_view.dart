@@ -272,6 +272,12 @@ class RegisterViewState extends State<RegisterView> {
                                       ));
                                     }
                                   } else {
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 200));
+                                    setState(() {
+                                      isButtonDisabled = false;
+                                      buttonText = 'SIGNUP';
+                                    });
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(AlertSnackbar(
                                       statusColor: const Color.fromARGB(
