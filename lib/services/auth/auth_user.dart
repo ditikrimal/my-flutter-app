@@ -4,15 +4,11 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class AuthUser {
-  final bool isOTPVerified;
-  const AuthUser(this.isOTPVerified);
+  final bool isLoggedIn;
+  const AuthUser(this.isLoggedIn);
 
-  static Future<AuthUser> fromFirebase(User user) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('emailOTP')
-        .doc(user.uid)
-        .get();
-    final data = doc.data();
-    return AuthUser(data != null && data['isVerified'] == true);
+  factory AuthUser.fromFirebase(User user) {
+    final isLoggedIn = user != null;
+    return AuthUser(isLoggedIn);
   }
 }

@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/sendOTP_auth.dart';
 import '../../widgets/alert_snackbar.dart';
 import '/firebase_options.dart';
 import 'package:email_otp/email_otp.dart';
@@ -23,7 +24,6 @@ class RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _name;
-  EmailOTP myauth = EmailOTP();
   bool isButtonDisabled = false;
   String buttonText = 'Signup';
 
@@ -195,21 +195,6 @@ class RegisterViewState extends State<RegisterView> {
                                     secondaryMessage: '',
                                   ));
                                 } else {
-                                  myauth.setSMTP(
-                                      host: "smtp.gmail.com",
-                                      auth: true,
-                                      username: "rml.ditik69@gmail.com",
-                                      password: "puoorapmqqunupdh",
-                                      secure: "TLS",
-                                      port: 587);
-
-                                  myauth.setConfig(
-                                      appEmail: "rml.ditik69@gmail.com",
-                                      appName: "My Notes",
-                                      userEmail: email,
-                                      otpLength: 6,
-                                      otpType: OTPType.digitsOnly);
-
                                   FirebaseAuth auth = FirebaseAuth.instance;
 
                                   List<String> emailExist = await auth
@@ -232,27 +217,31 @@ class RegisterViewState extends State<RegisterView> {
                                           secondaryMessage:
                                               ' (At least 8 characters)',
                                         ));
-                                      } else if (await myauth.sendOTP() ==
-                                          true) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(AlertSnackbar(
-                                          statusColor: Colors.green,
-                                          messageStatus: 'Great!',
-                                          message: "An otp was sent to $email",
-                                          secondaryMessage: '',
-                                        ));
+                                      } else {
+                                        EmailOTP myAuth;
+                                        myAuth = SendOTP(email);
+                                        if (myAuth != null) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(AlertSnackbar(
+                                            statusColor: Colors.green,
+                                            messageStatus: 'Great!',
+                                            message:
+                                                "An otp was sent to $email",
+                                            secondaryMessage: '',
+                                          ));
 
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => OtpPage(
-                                                    myauth: myauth,
-                                                    email: email,
-                                                    password: password,
-                                                    name: name,
-                                                  )),
-                                          (route) => false,
-                                        );
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => OtpPage(
+                                                      myauth: myAuth,
+                                                      email: email,
+                                                      password: password,
+                                                      name: name,
+                                                    )),
+                                            (route) => false,
+                                          );
+                                        }
                                       }
                                     } catch (e) {
                                       await Future.delayed(

@@ -30,6 +30,7 @@ class OtpPage extends StatefulWidget {
 
 class OtpPageState extends State<OtpPage> {
   late final TextEditingController _otp;
+
   // This variable determines whether the button is disable or not
   bool _isPressed = false;
   Color buttonColor = Colors.green;
@@ -177,6 +178,9 @@ class OtpPageState extends State<OtpPage> {
                           try {
                             if (await widget.myauth.verifyOTP(otp: inputOTP) ==
                                 true) {
+                              await FirebaseAuth.instance.currentUser
+                                  ?.verifyBeforeUpdateEmail('{$widget.email}');
+                              await FirebaseAuth.instance.currentUser?.reload();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(AlertSnackbar(
                                 statusColor: Colors.green,

@@ -127,6 +127,9 @@ class LoginViewState extends State<LoginView> {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: email, password: password);
+                            bool? isEmailVerified = FirebaseAuth
+                                .instance.currentUser?.emailVerified;
+                            print(isEmailVerified);
 
                             var collection = FirebaseFirestore.instance
                                 .collection('emailOTP');
@@ -134,19 +137,32 @@ class LoginViewState extends State<LoginView> {
 
                             Map<String, dynamic> data = docSnapshot.data()!;
                             var isVerified = data['isVerified'];
-                            if (isVerified == 'true') {
-                              await Future.delayed(
-                                  const Duration(milliseconds: 200));
-                              setState(() {
-                                isButtonDisabled = false;
-                                buttonText = 'Login';
-                              });
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/',
-                                (route) => false,
-                              );
+                            if (isEmailVerified == false) {
+                              print('Email is not Verified');
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(AlertSnackbar(
+                                statusColor:
+                                    const Color.fromARGB(255, 152, 18, 18),
+                                messageStatus: 'Snap!',
+                                message: 'Email is not Verified Yet.',
+                                secondaryMessage: '',
+                              ));
+                            } else {
+                              print('Email is Verified');
                             }
+                            // if (isVerified == 'true') {
+                            //   await Future.delayed(
+                            //       const Duration(milliseconds: 200));
+                            //   setState(() {
+                            //     isButtonDisabled = false;
+                            //     buttonText = 'Login';
+                            //   });
+                            //   Navigator.pushNamedAndRemoveUntil(
+                            //     context,
+                            //     '/',
+                            //     (route) => false,
+                            //   );
+                            // }
                           } on FirebaseAuthException {
                             await Future.delayed(
                                 const Duration(milliseconds: 100));
