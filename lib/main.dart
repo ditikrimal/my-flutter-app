@@ -1,20 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/auth/auth_service.dart';
+import 'package:myfirstapp/services/emailAuth.dart';
 import 'package:myfirstapp/views/User%20Auth/login_view.dart';
 import 'package:myfirstapp/views/User%20Auth/register_view.dart';
+import 'package:myfirstapp/views/User%20Auth/verifyEmail_view.dart';
 import 'package:myfirstapp/views/User%20Logged/logged_main.dart';
-
-import 'firebase_options.dart';
+import 'package:myfirstapp/widgets/alert_snackbar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  AuthService.firebase().initialize;
 
   runApp(MaterialApp(
     title: 'Flutter Demo',
@@ -36,18 +35,41 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final User? user = snapshot.data;
-          if (user == null) {
-            return LoginView(); // user is signed out
+    return FutureBuilder(
+      future: AuthService.firebase().initialize(),
+      builder: (context, snapshot) {
+        try {
+          final user = AuthService.firebase().currentUser;
+          final userEmail = FirebaseAuth.instance.currentUser?.email;
+
+          if (user != null) {
+            return FutureBuilder<bool>(
+              future: checkEmail(user, userEmail),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data == true ||
+                    user.isEmailVerified == true) {
+                  updateEmailVerification(userEmail);
+
+                  return LoggedMainView();
+                } else {
+                  AuthService.firebase().sendEmailVerification();
+                  return VerifyEmailView(
+                    email: userEmail,
+                  );
+                  // return AlertSnackbar(
+                  //   statusColor: Colors.red,
+                  //   messageStatus: 'Snap!',
+                  //   message: 'Email is not Verified',
+                  //   secondaryMessage: 'Verifiction link has been sent to mail.',
+                  // );
+                }
+              },
+            );
           } else {
-            return LoggedMainView(); //user is signed and redirected to logged in page
+            return LoginView();
           }
-        } else {
-          return CircularProgressIndicator(); // waiting for connection state to become active
+        } catch (e) {
+          return LoginView();
         }
       },
     );

@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter/foundation.dart';
 
 @immutable
 class AuthUser {
-  final bool isLoggedIn;
-  const AuthUser(this.isLoggedIn);
+  final bool isEmailVerified;
+  const AuthUser(this.isEmailVerified);
 
-  factory AuthUser.fromFirebase(User user) {
-    final isLoggedIn = user != null;
-    return AuthUser(isLoggedIn);
-  }
+  factory AuthUser.fromFirebase(User user) => AuthUser(user.emailVerified);
 }

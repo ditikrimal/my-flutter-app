@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/auth/auth_service.dart';
+import 'package:myfirstapp/views/User%20Auth/login_view.dart';
 import 'package:myfirstapp/views/User%20Logged/home_view.dart';
 import 'package:myfirstapp/views/User%20Logged/profile_view.dart';
 
@@ -135,7 +138,12 @@ class _LoggedMainViewState extends State<LoggedMainView> {
                       final confirmLogOut = await showLogoutBox(context);
 
                       if (confirmLogOut == true) {
-                        FirebaseAuth.instance.signOut();
+                        AuthService.firebase().logOut();
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          loginRoute,
+                          (route) => false,
+                        );
                       } else {
                         (index) {
                           setState(() {

@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/sendOTP_auth.dart';
 import '../../widgets/alert_snackbar.dart';
 import '/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,29 +42,7 @@ class OtpPageState extends State<OtpPage> {
       buttonColor = Colors.grey;
       _isPressed = true;
     });
-
-    widget.myauth.setSMTP(
-        host: "smtp.gmail.com",
-        auth: true,
-        username: "rml.ditik69@gmail.com",
-        password: "puoorapmqqunupdh",
-        secure: "TLS",
-        port: 587);
-
-    widget.myauth.setConfig(
-        appEmail: "rml.ditik69@gmail.com",
-        appName: "My Notes",
-        userEmail: widget.email,
-        otpLength: 6,
-        otpType: OTPType.digitsOnly);
-
-    widget.myauth.sendOTP();
-    ScaffoldMessenger.of(context).showSnackBar(AlertSnackbar(
-      statusColor: Colors.green,
-      messageStatus: 'Great!',
-      message: 'OTP sent again',
-      secondaryMessage: '',
-    ));
+    SendOTP(widget.email);
   }
 
   @override
@@ -178,9 +157,6 @@ class OtpPageState extends State<OtpPage> {
                           try {
                             if (await widget.myauth.verifyOTP(otp: inputOTP) ==
                                 true) {
-                              await FirebaseAuth.instance.currentUser
-                                  ?.verifyBeforeUpdateEmail('{$widget.email}');
-                              await FirebaseAuth.instance.currentUser?.reload();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(AlertSnackbar(
                                 statusColor: Colors.green,

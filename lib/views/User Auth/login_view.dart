@@ -1,10 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/auth/auth_exceptions.dart';
+import 'package:myfirstapp/services/auth/auth_service.dart';
 import '../../firebase_options.dart';
 import '../../widgets/alert_snackbar.dart';
 
@@ -124,46 +125,20 @@ class LoginViewState extends State<LoginView> {
                           final email = _email.text;
                           final password = _password.text;
                           try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: email, password: password);
-                            bool? isEmailVerified = FirebaseAuth
-                                .instance.currentUser?.emailVerified;
-                            print(isEmailVerified);
-
-                            var collection = FirebaseFirestore.instance
-                                .collection('emailOTP');
-                            var docSnapshot = await collection.doc(email).get();
-
-                            Map<String, dynamic> data = docSnapshot.data()!;
-                            var isVerified = data['isVerified'];
-                            if (isEmailVerified == false) {
-                              print('Email is not Verified');
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(AlertSnackbar(
-                                statusColor:
-                                    const Color.fromARGB(255, 152, 18, 18),
-                                messageStatus: 'Snap!',
-                                message: 'Email is not Verified Yet.',
-                                secondaryMessage: '',
-                              ));
-                            } else {
-                              print('Email is Verified');
-                            }
-                            // if (isVerified == 'true') {
-                            //   await Future.delayed(
-                            //       const Duration(milliseconds: 200));
-                            //   setState(() {
-                            //     isButtonDisabled = false;
-                            //     buttonText = 'Login';
-                            //   });
-                            //   Navigator.pushNamedAndRemoveUntil(
-                            //     context,
-                            //     '/',
-                            //     (route) => false,
-                            //   );
-                            // }
-                          } on FirebaseAuthException {
+                            await AuthService.firebase()
+                                .logIn(email: email, password: password);
+                            await Future.delayed(
+                                const Duration(milliseconds: 200));
+                            setState(() {
+                              isButtonDisabled = false;
+                              buttonText = 'Login';
+                            });
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/',
+                              (route) => false,
+                            );
+                          } on InvalidCredentialsAuthException {
                             await Future.delayed(
                                 const Duration(milliseconds: 100));
                             setState(() {

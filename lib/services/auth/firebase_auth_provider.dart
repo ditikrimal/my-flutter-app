@@ -1,4 +1,5 @@
-import 'package:email_otp/email_otp.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:myfirstapp/firebase_options.dart';
 
 import 'auth_exceptions.dart';
 import 'auth_provider.dart';
@@ -82,7 +83,19 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<EmailOTP> SendOTP({required String email}) {
-    throw UnimplementedError();
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.sendEmailVerification();
+    } else {
+      throw UserNotLoggedInAuthException();
+    }
   }
 }

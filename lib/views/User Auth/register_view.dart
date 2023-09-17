@@ -3,12 +3,11 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/auth/auth_service.dart';
 import 'package:myfirstapp/services/sendOTP_auth.dart';
 import '../../widgets/alert_snackbar.dart';
-import '/firebase_options.dart';
 import 'package:email_otp/email_otp.dart';
 
 import 'verifyotp_view.dart';
@@ -56,9 +55,7 @@ class RegisterViewState extends State<RegisterView> {
         ),
       ),
       body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
+        future: AuthService.firebase().initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
