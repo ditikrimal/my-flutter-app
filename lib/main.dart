@@ -9,7 +9,6 @@ import 'package:myfirstapp/views/User%20Auth/login_view.dart';
 import 'package:myfirstapp/views/User%20Auth/register_view.dart';
 import 'package:myfirstapp/views/User%20Auth/verifyEmail_view.dart';
 import 'package:myfirstapp/views/User%20Logged/logged_main.dart';
-import 'package:myfirstapp/widgets/alert_snackbar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,19 +48,12 @@ class HomePage extends StatelessWidget {
                 if (snapshot.hasData && snapshot.data == true ||
                     user.isEmailVerified == true) {
                   updateEmailVerification(userEmail);
-
                   return LoggedMainView();
                 } else {
                   AuthService.firebase().sendEmailVerification();
                   return VerifyEmailView(
                     email: userEmail,
                   );
-                  // return AlertSnackbar(
-                  //   statusColor: Colors.red,
-                  //   messageStatus: 'Snap!',
-                  //   message: 'Email is not Verified',
-                  //   secondaryMessage: 'Verifiction link has been sent to mail.',
-                  // );
                 }
               },
             );

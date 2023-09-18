@@ -15,26 +15,25 @@ class FirebaseAuthProvider implements AuthProvider {
     required String password,
   }) async {
     try {
-      if (email.isEmpty || name.isEmpty || password.isEmpty) {
-        throw EmptyFieldAuthException();
-      }
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+
       final user = currentUser;
+
       if (user != null) {
         return user;
       } else {
         throw UserNotLoggedInAuthException();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'emali-already-in-use') {
+      if (e.code == 'email-already-in-use') {
         throw EmailAlreadyTakenAuthException();
       } else if (e.code == 'weak-password') {
         throw WeakPasswordAuthException();
       } else if (e.code == 'invalid-email') {
         throw InvalidEmailAuthException();
       } else {
-        throw GenericAuthException();
+        throw EmptyFieldAuthException();
       }
     } catch (_) {
       throw GenericAuthException();

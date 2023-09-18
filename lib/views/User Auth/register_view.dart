@@ -2,15 +2,14 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
+import 'package:myfirstapp/services/auth/auth_exceptions.dart';
 import 'package:myfirstapp/services/auth/auth_service.dart';
 import 'package:myfirstapp/services/sendOTP_auth.dart';
+import 'package:myfirstapp/views/User%20Auth/verifyotp_view.dart';
 import '../../widgets/alert_snackbar.dart';
-import 'package:email_otp/email_otp.dart';
-
-import 'verifyotp_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -77,8 +76,9 @@ class RegisterViewState extends State<RegisterView> {
                           padding: const EdgeInsets.only(left: 40, right: 40),
                           margin: const EdgeInsets.only(top: 40),
                           child: TextField(
+                              textCapitalization: TextCapitalization.words,
                               controller: _name,
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.text,
                               autocorrect: false,
                               cursorColor: Colors.white,
                               style: const TextStyle(
@@ -157,7 +157,41 @@ class RegisterViewState extends State<RegisterView> {
                               final password = _password.text;
                               final name = _name.text;
 
-                              if (email == "" || password == "" || name == "") {
+                              try {
+                                await Future.delayed(
+                                    const Duration(milliseconds: 200));
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  buttonText = 'SIGNUP';
+                                });
+                                await AuthService.firebase().createUser(
+                                    name: name,
+                                    email: email,
+                                    password: password);
+                                EmailOTP myAuth;
+                                myAuth = SendOTP(email);
+                                if (myAuth != null) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(AlertSnackbar(
+                                    statusColor: Colors.green,
+                                    messageStatus: 'Great!',
+                                    message: "An otp was sent to $email",
+                                    secondaryMessage: '',
+                                  ));
+
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OtpPage(
+                                              myauth: myAuth,
+                                              email: email,
+                                              password: password,
+                                              name: name,
+                                            )),
+                                    (route) => false,
+                                  );
+                                }
+                              } on EmptyFieldAuthException {
                                 await Future.delayed(
                                     const Duration(milliseconds: 200));
                                 setState(() {
@@ -172,108 +206,51 @@ class RegisterViewState extends State<RegisterView> {
                                   message: 'Empty fields',
                                   secondaryMessage: '',
                                 ));
-                              } else {
-                                final bool emailValid = RegExp(
-                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(email);
-                                if (emailValid == false) {
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 200));
-                                  setState(() {
-                                    isButtonDisabled = false;
-                                    buttonText = 'SIGNUP';
-                                  });
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(AlertSnackbar(
-                                    statusColor:
-                                        const Color.fromARGB(255, 152, 18, 18),
-                                    messageStatus: 'Snap!',
-                                    message: 'Not a valid email',
-                                    secondaryMessage: '',
-                                  ));
-                                } else {
-                                  FirebaseAuth auth = FirebaseAuth.instance;
-
-                                  List<String> emailExist = await auth
-                                      .fetchSignInMethodsForEmail(email);
-                                  if (emailExist.isEmpty) {
-                                    try {
-                                      if (password.length < 8) {
-                                        await Future.delayed(
-                                            const Duration(milliseconds: 200));
-                                        setState(() {
-                                          isButtonDisabled = false;
-                                          buttonText = 'SIGNUP';
-                                        });
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(AlertSnackbar(
-                                          statusColor: const Color.fromARGB(
-                                              255, 152, 18, 18),
-                                          messageStatus: 'Snap!',
-                                          message: 'Weak password',
-                                          secondaryMessage:
-                                              ' (At least 8 characters)',
-                                        ));
-                                      } else {
-                                        EmailOTP myAuth;
-                                        myAuth = SendOTP(email);
-                                        if (myAuth != null) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(AlertSnackbar(
-                                            statusColor: Colors.green,
-                                            messageStatus: 'Great!',
-                                            message:
-                                                "An otp was sent to $email",
-                                            secondaryMessage: '',
-                                          ));
-
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => OtpPage(
-                                                      myauth: myAuth,
-                                                      email: email,
-                                                      password: password,
-                                                      name: name,
-                                                    )),
-                                            (route) => false,
-                                          );
-                                        }
-                                      }
-                                    } catch (e) {
-                                      await Future.delayed(
-                                          const Duration(milliseconds: 200));
-                                      setState(() {
-                                        isButtonDisabled = false;
-                                        buttonText = 'SIGNUP';
-                                      });
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(AlertSnackbar(
-                                        statusColor: const Color.fromARGB(
-                                            255, 152, 18, 18),
-                                        messageStatus: 'Snap!',
-                                        message: 'An error has occured',
-                                        secondaryMessage: ' (Please try again)',
-                                      ));
-                                    }
-                                  } else {
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 200));
-                                    setState(() {
-                                      isButtonDisabled = false;
-                                      buttonText = 'SIGNUP';
-                                    });
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(AlertSnackbar(
-                                      statusColor: const Color.fromARGB(
-                                          255, 152, 18, 18),
-                                      messageStatus: 'Snap!',
-                                      message: 'Email is already taken',
-                                      secondaryMessage: '',
-                                    ));
-                                  }
-                                }
+                              } on InvalidEmailAuthException {
+                                await Future.delayed(
+                                    const Duration(milliseconds: 200));
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  buttonText = 'SIGNUP';
+                                });
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(AlertSnackbar(
+                                  statusColor:
+                                      const Color.fromARGB(255, 152, 18, 18),
+                                  messageStatus: 'Snap!',
+                                  message: 'Not a valid email',
+                                  secondaryMessage: '',
+                                ));
+                              } on WeakPasswordAuthException {
+                                await Future.delayed(
+                                    const Duration(milliseconds: 200));
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  buttonText = 'SIGNUP';
+                                });
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(AlertSnackbar(
+                                  statusColor:
+                                      const Color.fromARGB(255, 152, 18, 18),
+                                  messageStatus: 'Snap!',
+                                  message: 'Weak password',
+                                  secondaryMessage: ' (At least 6 characters)',
+                                ));
+                              } on EmailAlreadyTakenAuthException {
+                                await Future.delayed(
+                                    const Duration(milliseconds: 200));
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  buttonText = 'SIGNUP';
+                                });
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(AlertSnackbar(
+                                  statusColor:
+                                      const Color.fromARGB(255, 152, 18, 18),
+                                  messageStatus: 'Snap!',
+                                  message: 'Email is already taken',
+                                  secondaryMessage: '',
+                                ));
                               }
                             },
                             style: ButtonStyle(

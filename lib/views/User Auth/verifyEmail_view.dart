@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/constants/routes.dart';
@@ -85,11 +86,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                         ),
                         child: TextButton(
                           onPressed: () async {
+                            FirebaseAuth.instance.currentUser?.reload();
                             Navigator.pushNamedAndRemoveUntil(
-                                context, loginRoute, (route) => false);
+                              context,
+                              '/',
+                              (route) => false,
+                            );
                           },
                           child: const Text(
-                            'Go back to login',
+                            'Check Again',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 19,
